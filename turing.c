@@ -14,7 +14,7 @@ struct rule
 	short nextstate;
 } program[2]['Z'-'A'];
 
-int main(void)
+bool parse_rules(void)
 {
 	char clump[4];
 	int onvalue = 0;
@@ -29,19 +29,19 @@ int main(void)
 		{
 			fprintf(stderr,
 					"Invalid write value: %c\n", clump[0]);
-			return EXIT_FAILURE;
+			return false;
 		}
 		if (clump[1] != 'L' && clump[1] != 'R')
 		{
 			fprintf(stderr,
 					"Invalid direction: %c\n", clump[1]);
-			return EXIT_FAILURE;
+			return false;
 		}
 		if (clump[2] < 'A' || clump[2] > 'Z')
 		{
 			fprintf(stderr,
 					"Invalid next state: %c\n", clump[2]);
-			return EXIT_FAILURE;
+			return false;
 		}
 		program[onvalue][curstate] =
 			(struct rule)
@@ -61,7 +61,34 @@ int main(void)
 	if (onvalue == 1)
 	{
 		fputs("Error: odd number of rules\n", stderr);
-		return EXIT_FAILURE;
+		return false;
 	}
+	return true;
+}
+
+int main(void)
+{
+	size_t head = TAPELEN/2;
+	short state = 0;
+	struct rule *r;
+	unsigned long steps = 0;
+	if (!parse_rules())
+		return EXIT_FAILURE;
+	while (true)
+	{
+		r = &program[tape[head]][state];
+		if (r->halt)
+			break;
+		tape[head] = r->write;
+		head += r->movehead;
+		if (head > TAPELEN) /* also catches <0 wraparound */
+		{
+			fprintf(stderr, "Tape out of bounds\n");
+			return EXIT_FAILURE;
+		}
+		state = r->nextstate;
+		steps++;
+	}
+	printf("Finished in %lu steps\n", steps);
 	return 0;
 }
