@@ -28,19 +28,19 @@ bool parse_rules(void)
 		if (clump[0] != '0' && clump[0] != '1')
 		{
 			fprintf(stderr,
-					"Invalid write value: %c\n", clump[0]);
+			        "Invalid write value: %c\n", clump[0]);
 			return false;
 		}
 		if (clump[1] != 'L' && clump[1] != 'R')
 		{
 			fprintf(stderr,
-					"Invalid direction: %c\n", clump[1]);
+			        "Invalid direction: %c\n", clump[1]);
 			return false;
 		}
 		if (clump[2] < 'A' || clump[2] > 'Z')
 		{
 			fprintf(stderr,
-					"Invalid next state: %c\n", clump[2]);
+			        "Invalid next state: %c\n", clump[2]);
 			return false;
 		}
 		program[onvalue][curstate] =
