@@ -81,7 +81,7 @@ int main(void)
 			break;
 		tape[head] = r->write;
 		head += r->movehead;
-		if (head > TAPELEN) /* also catches <0 wraparound */
+		if (head >= TAPELEN) /* also catches <0 wraparound */
 		{
 			fprintf(stderr, "Tape out of bounds\n");
 			return EXIT_FAILURE;
